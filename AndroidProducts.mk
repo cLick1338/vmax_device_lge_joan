@@ -7,3 +7,7 @@
 
 PRODUCT_MAKEFILES += \
     $(LOCAL_DIR)/lineage_joan.mk
+
+COMMON_LUNCH_CHOICES += \
+    lineage_joan-bp1a-user \
+    lineage_joan-bp1a-userdebug

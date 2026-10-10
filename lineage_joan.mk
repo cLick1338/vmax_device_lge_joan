@@ -33,3 +33,8 @@ PRODUCT_BUILD_PROP_OVERRIDES += \
     DeviceName="joan"
 
 PRODUCT_SYSTEM_PROPERTY_BLACKLIST += ro.product.model ro.vendor.product.model ro.product.system.model
+
+ifneq ($(filter user userdebug,$(TARGET_BUILD_VARIANT)),)
+PRODUCT_DEFAULT_DEV_CERTIFICATE := .repo/local_keys/joan/releasekey
+PRODUCT_OTA_PUBLIC_KEYS := .repo/local_keys/joan/releasekey.x509.pem
+endif
