@@ -11,4 +11,4 @@ export BUILD_NUMBER="${BUILD_NUMBER:-$(date -u +%Y%m%d%H%M%S)}"
 m "-j${JOAN_BUILD_JOBS:-8}" target-files-package otatools
 python3 device/lge/joan/release.py sign \
     "$OUT/obj/PACKAGING/target_files_intermediates/lineage_joan-target_files.zip" \
-    "${JOAN_RELEASE_OUTPUT:-out/release}"
+    "${JOAN_RELEASE_OUTPUT:-$OUT/release}"

@@ -100,7 +100,7 @@ def sign(target, output):
         verify_props(properties(archive), signed=False, variant=variant)
     build_number = re.sub(
         r"[^A-Za-z0-9._-]", "_", os.environ.get("BUILD_NUMBER", "unknown"))
-    ota = output / f"lineage_joan-{variant}-{build_number}-signed-ota.zip"
+    ota = output / f"vmax_joan-{variant}-{build_number}-signed-ota.zip"
     if ota.exists():
         raise RuntimeError(f"Refusing to overwrite release artifact: {ota}")
     host = ROOT / os.environ.get("OUT_DIR", "out") / "host/linux-x86/bin"
