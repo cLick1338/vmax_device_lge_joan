@@ -27,6 +27,10 @@ PRODUCT_RELEASE_NAME := V30
 
 PRODUCT_GMS_CLIENTID_BASE := android-om-lg
 
+# Build number shown in About phone, no spaces allowed in the value
+PRODUCT_SYSTEM_PROPERTIES += \
+    ro.build.display.id=Vmax-$(TARGET_BUILD_VARIANT)-$(PLATFORM_VERSION)-$(BUILD_ID)-$(or $(BUILD_NUMBER),eng)
+
 PRODUCT_BUILD_PROP_OVERRIDES += \
     BuildDesc="joan_global_com-user 8.0.0 OPR1.170623.026 181381736b4e9 release-keys" \
     BuildFingerprint="lge/joan_global_com/joan:8.0.0/OPR1.170623.026/181381736b4e9:user/release-keys" \
