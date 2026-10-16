@@ -3,11 +3,13 @@
 
 import argparse
 import hashlib
+import json
 import os
 from pathlib import Path
 import re
 import subprocess
 import tempfile
+from urllib.parse import quote
 import zipfile
 
 
@@ -90,6 +92,29 @@ def verify_props(props, signed, variant):
         print(f"{name}={props.get(name)}")
 
 
+def update_manifest(ota, props, build_number):
+    with zipfile.ZipFile(ota) as archive:
+        metadata = dict(line.split("=", 1) for line in
+                        archive.read("META-INF/com/android/metadata").decode().splitlines()
+                        if "=" in line)
+    digest = hashlib.sha256()
+    with ota.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    base_url = os.environ.get("JOAN_OTA_BASE_URL", "").strip() or (
+        "https://github.com/cLick1338/vmax/releases/download/"
+        + quote(build_number, safe=""))
+    return {"response": [{
+        "datetime": int(metadata["post-timestamp"]),
+        "filename": ota.name,
+        "id": digest.hexdigest(),
+        "romtype": props["ro.lineage.releasetype"].lower(),
+        "size": ota.stat().st_size,
+        "url": base_url.rstrip("/") + "/" + quote(ota.name, safe=""),
+        "version": props["ro.lineage.build.version"],
+    }]}
+
+
 def sign(target, output):
     make_base_keys()
     target = target.resolve()
@@ -146,11 +171,18 @@ def sign(target, output):
         staged_ota = Path(temporary) / ota.name
         run(*args, target, signed)
         with zipfile.ZipFile(signed) as archive:
-            verify_props(properties(archive), signed=True, variant=variant)
+            props = properties(archive)
+            verify_props(props, signed=True, variant=variant)
         run(host / "ota_from_target_files", "-k", KEYS / "releasekey",
             "--block", "--backup=true", signed, staged_ota)
+        staged_json = Path(temporary) / "update.json"
+        staged_json.write_text(
+            json.dumps(update_manifest(staged_ota, props, build_number), indent=2) + "\n",
+            encoding="utf-8")
         staged_ota.replace(ota)
+        staged_json.replace(output / "update.json")
     print(f"\nINSTALL IN RECOVERY (ADB SIDELOAD): {ota}")
+    print(f"UPDATE MANIFEST: {output / 'update.json'}")
 
 
 def main():
