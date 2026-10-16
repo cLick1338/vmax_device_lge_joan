@@ -1,0 +1,6 @@
+# Vmax
+*.blend1
+*Zone.Identifier
+# third-party reference clip, not ours to ship
+Video-*.mp4
+render/

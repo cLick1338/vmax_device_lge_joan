@@ -11,6 +11,9 @@ TARGET_OTA_ASSERT_DEVICE := v30,joan,h930,h932
 # inherit from common repository
 include device/lge/joan-common/BoardConfigCommon.mk
 
+# Bootanimation (Vmax, 1440x512, built from bootanimation/vmax_bootanim.blend)
+TARGET_BOOTANIMATION := $(DEVICE_PATH)/bootanimation/bootanimation.zip
+
 # Kernel
 TARGET_KERNEL_CONFIG := lineageos_joan_defconfig
 
