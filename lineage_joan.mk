@@ -4,6 +4,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
+# Vmax: omit bundled audio effect panels.
+TARGET_EXCLUDES_AUDIOFX := true
+TARGET_EXCLUDES_MUSICFX := true
+
 # Inherit some common Lineage stuff.
 $(call inherit-product, vendor/lineage/config/common_full_phone.mk)
 
